@@ -5,6 +5,8 @@ using UnityEngine;
 public class MouseKeyboardController : MonoBehaviour
 {
     public float speed;
+    public float rotationSpeed;
+    public Camera mainCamera;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,16 +17,18 @@ public class MouseKeyboardController : MonoBehaviour
     void Update()
     {
         KeyBoardMoving();
-        var mouse = Input.mouseScrollDelta;
-        Debug.Log(mouse);
+        // RotationToCursor();
     }
 
 
     void KeyBoardMoving()
     {
         float direction = Input.GetAxis("Horizontal");
-        transform.Translate(new Vector3(1,0,0) * Time.deltaTime * speed * direction);
+        Vector3 convertedHorizontalVector = transform.InverseTransformDirection(new Vector3(1, 0, 0) );
+        transform.Translate( convertedHorizontalVector * Time.deltaTime * speed * direction);
         direction = Input.GetAxis("Vertical");
-        transform.Translate(new Vector3(0,1,0) * Time.deltaTime * speed * direction);
+        Vector3 convertedVerticalVector = transform.InverseTransformDirection(new Vector3(0, 0, 1) );
+        transform.Translate( convertedVerticalVector * Time.deltaTime * speed * direction);
     }
+   
 }
