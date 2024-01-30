@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -6,14 +7,19 @@ using UnityEngine;
 public class MouseController : MonoBehaviour
 {
     public Camera mainCamera;
+    private Rigidbody playerRigidbody;
+    public Transform AxisEmpty;
     // Start is called before the first frame update
     void Start()
     {
-       
+        playerRigidbody = gameObject.GetComponent<Rigidbody>();
     }
-
     // Update is called once per frame
     void Update()
+    {
+        //RotationToCursor();
+    }
+    void FixedUpdate()
     {
         RotationToCursor();
     }
@@ -21,7 +27,7 @@ public class MouseController : MonoBehaviour
     {
         Vector3 cursorPosition = Input.mousePosition;
         cursorPosition.z = mainCamera.transform.position.y;
-        return transform.parent.InverseTransformPoint(mainCamera.ScreenToWorldPoint(cursorPosition));
+        return AxisEmpty.InverseTransformPoint(mainCamera.ScreenToWorldPoint(cursorPosition));
     }
 
     private Vector3 ObjectToCursorVectorCalculate()
@@ -33,14 +39,16 @@ public class MouseController : MonoBehaviour
     {
         Vector3 result = ObjectToCursorVectorCalculate();
         result.Normalize();
-        float angle = Vector3.Angle(transform.parent.forward, result);
+        float angle = Vector3.Angle(AxisEmpty.forward, result);
         if (ObjectToCursorVectorCalculate().x<0)
         {
-            gameObject.transform.eulerAngles = new Vector3(90f,0f,angle) ; 
+            Quaternion deltaRotation = Quaternion.Euler(new Vector3(90f,0f,angle));
+            playerRigidbody.rotation = deltaRotation;
         }
         else if(ObjectToCursorVectorCalculate().x>0)
         {
-            gameObject.transform.eulerAngles = new Vector3(90f,0f,-angle) ;
+            Quaternion deltaRotation = Quaternion.Euler(new Vector3(90f,0f,-angle));
+            playerRigidbody.rotation=deltaRotation;
         }
         
     }
