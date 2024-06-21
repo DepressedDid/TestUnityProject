@@ -15,7 +15,7 @@ public class MouseController : MonoBehaviour
     }
     void Update()
     {
-       
+   
     }
     void FixedUpdate()
     {
@@ -26,7 +26,9 @@ public class MouseController : MonoBehaviour
         Vector3 cursorPosition = Input.mousePosition;
         cursorPosition.z = mainCamera.transform.position.y;
         Vector3 worldCoordinate = mainCamera.ScreenToWorldPoint(cursorPosition);
-        Vector3 localCoordinate = worldCoordinate - transform.position;
+        Vector3 playerPosition = transform.position;
+        playerPosition.y = 0;
+        Vector3 localCoordinate = worldCoordinate - playerPosition;
         return localCoordinate;
     }
     private Vector3 ObjectToCursorVectorCalculate()
